@@ -16,13 +16,13 @@ const addBookHandler = (request, h) => {
     return response;
   }
 
-  const bookId = nanoid(16);
+  const id = nanoid(16);
   const finished = false;
   const createdAt = new Date().toISOString();
   const updatedAt = createdAt;
 
   const newBook = {
-    bookId,
+    id,
     ...payload,
     finished,
     createdAt,
@@ -30,14 +30,14 @@ const addBookHandler = (request, h) => {
   };
 
   books.push(newBook);
-  const isSuccess = books.filter((book) => book.bookId === bookId).length > 0;
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (isSuccess) {
     const response = h.response({
       status: 'success',
       message: 'Buku berhasil ditambahkan',
       data: {
-        bookId,
+        bookId: id,
       },
     });
 
@@ -54,4 +54,19 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
-module.exports = addBookHandler;
+const getAllBooksHandler = (request, h) => {
+  const newBooks = books.map((book) => ({
+    id: book.id,
+    name: book.name,
+    publisher: book.publisher,
+  }));
+
+  return {
+    status: 'success',
+    data: {
+      books: newBooks,
+    },
+  };
+};
+
+module.exports = { addBookHandler, getAllBooksHandler };
