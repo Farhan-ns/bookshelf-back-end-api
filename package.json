@@ -1,7 +1,7 @@
 {
   "name": "bookshelf-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bookshelf Back-End API for Dicoding class submission.",
   "main": "./src/server.js",
   "scripts": {
     "dev": "nodemon ./src/server.js"
