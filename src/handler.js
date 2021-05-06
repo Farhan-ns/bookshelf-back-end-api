@@ -1,10 +1,10 @@
 const { nanoid } = require('nanoid');
 const books = require('./books');
-const validateAddBook = require('./validate');
+const validateBookProps = require('./validate');
 
 const addBookHandler = (request, h) => {
   const { payload } = request;
-  const error = validateAddBook(payload);
+  const error = validateBookProps(payload, request.method);
 
   if (error) {
     const response = h.response({
