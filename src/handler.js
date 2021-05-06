@@ -5,7 +5,6 @@ const validateBookProps = require('./validate');
 const addBookHandler = (request, h) => {
   const { payload } = request;
   const error = validateBookProps(payload, request.method);
-
   if (error) {
     const response = h.response({
       status: 'fail',
@@ -17,7 +16,7 @@ const addBookHandler = (request, h) => {
   }
 
   const id = nanoid(16);
-  const finished = false;
+  const { finished = false } = payload;
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
@@ -55,11 +54,28 @@ const addBookHandler = (request, h) => {
 };
 
 const getAllBooksHandler = (request, h) => {
-  const newBooks = books.map(({ id, name, publisher }) => ({
-    id,
-    name,
-    publisher,
-  }));
+  const { name = '', reading = -1, finished = -1 } = request.query;
+  console.log({ name, reading, finished });
+
+  let newBooks = books;
+  if (reading >= 0) {
+    // eslint-disable-next-line eqeqeq
+    newBooks = newBooks.filter((book) => book.reading == reading);
+  }
+  if (finished >= 0) {
+    // eslint-disable-next-line eqeqeq
+    newBooks = newBooks.filter((book) => book.finished == finished);
+  }
+
+  newBooks = newBooks
+    .filter((book) => book.name.toLowerCase().includes(name.toLowerCase()))
+    .map(({
+      id, name, publisher,
+    }) => ({
+      id,
+      name,
+      publisher,
+    }));
 
   return {
     status: 'success',
