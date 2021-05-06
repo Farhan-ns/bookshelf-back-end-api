@@ -4,7 +4,8 @@
   "description": "Bookshelf Back-End API for Dicoding class submission.",
   "main": "./src/server.js",
   "scripts": {
-    "dev": "nodemon ./src/server.js"
+    "dev": "nodemon ./src/server.js",
+    "lint": "eslint ./src"
   },
   "keywords": [],
   "author": "Farhanunnasih",
