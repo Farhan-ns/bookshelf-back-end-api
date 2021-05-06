@@ -6,13 +6,10 @@ const addBookHandler = (request, h) => {
   const { payload } = request;
   const error = validateBookProps(payload, request.method);
   if (error) {
-    const response = h.response({
+    return h.response({
       status: 'fail',
       message: error,
-    });
-
-    response.code(400);
-    return response;
+    }).code(400);
   }
 
   const id = nanoid(16);
@@ -32,30 +29,23 @@ const addBookHandler = (request, h) => {
   const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (isSuccess) {
-    const response = h.response({
+    return h.response({
       status: 'success',
       message: 'Buku berhasil ditambahkan',
       data: {
         bookId: id,
       },
-    });
-
-    response.code(201);
-    return response;
+    }).code(201);
   }
 
-  const response = h.response({
+  return h.response({
     status: 'fail',
     message: 'Buku gagal ditambahkan',
-  });
-
-  response.code(500);
-  return response;
+  }).code(500);
 };
 
 const getAllBooksHandler = (request, h) => {
   const { name = '', reading = -1, finished = -1 } = request.query;
-  console.log({ name, reading, finished });
 
   let newBooks = books;
   if (reading >= 0) {
@@ -99,13 +89,10 @@ const getBookByIdHandler = (request, h) => {
     };
   }
 
-  const response = h.response({
+  return h.response({
     status: 'fail',
     message: 'Buku tidak ditemukan',
-  });
-
-  response.code(404);
-  return response;
+  }).code(404);
 };
 
 const editBookByIdHandler = (request, h) => {
@@ -115,17 +102,15 @@ const editBookByIdHandler = (request, h) => {
   const error = validateBookProps(payload, request.method);
 
   if (error) {
-    const response = h.response({
+    return h.response({
       status: 'fail',
       message: error,
-    });
-
-    response.code(400);
-    return response;
+    }).code(400);
   }
 
   const index = books.findIndex((book) => book.id === id);
   const updatedAt = new Date().toISOString();
+
   if (index !== -1) {
     books[index] = {
       ...books[index],
@@ -139,13 +124,10 @@ const editBookByIdHandler = (request, h) => {
     };
   }
 
-  const response = h.response({
+  return h.response({
     status: 'fail',
     message: 'Gagal memperbarui buku. Id tidak ditemukan',
-  });
-
-  response.code(404);
-  return response;
+  }).code(404);
 };
 
 const deleteBookByIdHandler = (request, h) => {
@@ -162,13 +144,10 @@ const deleteBookByIdHandler = (request, h) => {
     };
   }
 
-  const response = h.response({
+  return h.response({
     status: 'fail',
     message: 'Buku gagal dihapus. Id tidak ditemukan',
-  });
-
-  response.code(404);
-  return response;
+  }).code(404);
 };
 
 module.exports = {
