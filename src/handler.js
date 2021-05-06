@@ -92,4 +92,46 @@ const getBookByIdHandler = (request, h) => {
   return response;
 };
 
-module.exports = { addBookHandler, getAllBooksHandler, getBookByIdHandler };
+const editBookByIdHandler = (request, h) => {
+  const { payload } = request;
+  const { bookId: id } = request.params;
+
+  const error = validateBookProps(payload, request.method);
+
+  if (error) {
+    const response = h.response({
+      status: 'fail',
+      message: error,
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  const index = books.findIndex((book) => book.id === id);
+  const updatedAt = new Date().toISOString();
+  if (index !== -1) {
+    books[index] = {
+      ...books[index],
+      ...payload,
+      updatedAt,
+    };
+
+    return {
+      status: 'success',
+      message: 'Buku berhasil diperbarui',
+    };
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal memperbarui buku. Id tidak ditemukan',
+  });
+
+  response.code(404);
+  return response;
+};
+
+module.exports = {
+  addBookHandler, getAllBooksHandler, getBookByIdHandler, editBookByIdHandler,
+};
