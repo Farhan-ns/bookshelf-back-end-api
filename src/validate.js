@@ -1,13 +1,16 @@
-const validateAddBook = (payload) => {
+const validateBookProps = (payload, method) => {
   const { readPage, pageCount } = payload;
+  let verb = 'NONE';
+  if (method === 'post') verb = 'menambahkan';
+  if (method === 'put') verb = 'memperbarui';
 
   if ('name' in payload === false || payload.name <= 0) {
-    return 'Gagal menambahkan buku. Mohon isi nama buku';
+    return `Gagal ${verb} buku. Mohon isi nama buku`;
   }
   if (readPage > pageCount) {
-    return 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount';
+    return `Gagal ${verb} buku. readPage tidak boleh lebih besar dari pageCount`;
   }
   return '';
 };
 
-module.exports = validateAddBook;
+module.exports = validateBookProps;
